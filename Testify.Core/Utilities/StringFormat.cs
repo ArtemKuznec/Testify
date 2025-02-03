@@ -6,5 +6,4 @@
 
         public const string Short = "S";
     }
-
 }

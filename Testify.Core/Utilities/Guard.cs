@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-
 
 namespace Testify.Core.Utilities
 {
@@ -48,5 +48,4 @@ namespace Testify.Core.Utilities
             return parameterValue;
         }
     }
-
 }
