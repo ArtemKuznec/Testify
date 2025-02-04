@@ -31,6 +31,6 @@ namespace Testify.Allure.Implementations
         public override Actions Clear(TimeSpan? timeout = null) => Invoke(timeout => base.Clear(timeout), ClearDescription, timeout);
 
         private Actions Invoke(Func<TimeSpan?, Actions> action, string actionDescription, TimeSpan? timeout = null) =>
-            AllureExtensions.StartStep(() => $"{actionDescription} the \"{component}\"", () => action.Invoke(timeout));
+            AllureExtensions.StartStep($"{actionDescription} the \"{component}\"", () => action.Invoke(timeout));
     }
 }

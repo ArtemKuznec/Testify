@@ -75,23 +75,31 @@ namespace Testify.Core.Implementations
 
             var instance = builder.Build();
 
+            var count = 0;
+
+            while (true)
+            {
+                var description = instance.Description.With(count);
+                instance.SetDescription(description);
+
+                if (instance.IsAvailable(_duration)) count++;
+                else break;
+            }
+
             if (Requirement is null)
             {
-                while (true)
+                for (var index = 0; index < count; index++)
                 {
-                    var description = instance.Description.With(components.Count);
+                    var description = instance.Description.With(index);
                     var component = builder.WithDescription(description).Build();
-
-                    if (component.IsAvailable(_duration))
-                        components.Add(component);
-                    else break;
+                    components.Add(component);
                 }
             }
             else
             {
                 var indexes = components.Select(component => component.Index).ToArray();
 
-                for (int index = 0; index < int.MaxValue; index++)
+                for (int index = 0; index < count; index++)
                 {
                     if (indexes.Contains(index))
                         continue;
@@ -101,13 +109,10 @@ namespace Testify.Core.Implementations
 
                     if (Requirement.Execute(instance, _duration))
                     {
-                        description = description.With(components.Count);
+                        description = description.With(index);
                         var component = builder.WithDescription(description).Build();
-
-                        component.SetIndex(index);
                         components.Add(component);
                     }
-                    else break;
                 }
             }
 

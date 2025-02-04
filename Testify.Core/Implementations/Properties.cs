@@ -63,7 +63,7 @@ namespace Testify.Core.Implementations
 
         public string? GetCssProperty(string name, TimeSpan? timeout = null) => Invoke(element => element.GetCssValue(name), $"CSS \"{name}\" property", timeout);
 
-        private TValue Invoke<TValue>(Func<IWebElement, TValue> function, string returnValueDescription, TimeSpan? timeout = null)
+        private TValue Invoke<TValue>(Func<IWebElement, TValue> function, string functionDescription, TimeSpan? timeout = null)
         {
             timeout ??= _component.Timeout;
 
@@ -81,7 +81,7 @@ namespace Testify.Core.Implementations
                 catch (Exception exception)
                 {
                     if (stopwatch.Elapsed >= timeout.Value)
-                        throw new PropertyException($"An exception occurred while retrieving the {returnValueDescription} of the web component.", _component, exception);
+                        throw new PropertyException($"An exception occurred while retrieving the {functionDescription} of the web component.", _component, exception);
                 }
                 finally
                 {

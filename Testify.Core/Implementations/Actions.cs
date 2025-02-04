@@ -5,7 +5,6 @@ using OpenQA.Selenium;
 using System;
 using System.Diagnostics;
 using System.Threading;
-using Interactions = OpenQA.Selenium.Interactions;
 
 namespace Testify.Core.Implementations
 {
@@ -25,7 +24,7 @@ namespace Testify.Core.Implementations
 
         public Actions(IWebComponent component) => this.component = component.ThrowIfNull();
 
-        protected static Interactions.Actions CreateActions() => new(IWebComponent.Configuration.Driver);
+        protected static OpenQA.Selenium.Interactions.Actions CreateActions() => new(IWebComponent.Configuration.Driver);
 
         public virtual Actions SendKeys(string keys, TimeSpan? timeout = null) => Invoke(element => element.SendKeys(keys), $"sending \"{keys}\" keys to", timeout);
 
@@ -39,7 +38,7 @@ namespace Testify.Core.Implementations
 
         public virtual Actions Click(TimeSpan? timeout = null) => Invoke(element => element.Click(), ClickDescription, timeout);
 
-        private Actions Invoke(Action<IWebElement> action, string actionErrorDescription, TimeSpan? timeout = null)
+        private Actions Invoke(Action<IWebElement> action, string actionDescription, TimeSpan? timeout = null)
         {
             timeout ??= component.Timeout;
 
@@ -58,7 +57,7 @@ namespace Testify.Core.Implementations
                 catch (Exception exception)
                 {
                     if (stopwatch.Elapsed >= timeout.Value)
-                        throw new ActionException($"An exception occurred while {actionErrorDescription} the web component.", component, exception);
+                        throw new ActionException($"An exception occurred while {actionDescription} the web component.", component, exception);
                 }
                 finally
                 {
