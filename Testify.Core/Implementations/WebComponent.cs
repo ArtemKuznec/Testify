@@ -1,10 +1,12 @@
 ﻿using Testify.Core.Interfaces;
 using Testify.Core.Utilities;
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 
 namespace Testify.Core.Implementations
 {
-    internal class WebComponent : IWebComponent
+    public class WebComponent : IWebComponent
     {
         public Description Description { get; private set; }
 
@@ -12,7 +14,7 @@ namespace Testify.Core.Implementations
 
         public Refresher Refresher { get; }
 
-        public IActions Actions { get; }
+        public Actions Actions { get; }
 
         public IWebComponent? Parent { get; private set; }
 
@@ -88,19 +90,14 @@ namespace Testify.Core.Implementations
             else indexValue = Index;
 
             var index = indexValue > 0 ? $"[{indexValue}]" : string.Empty;
-            var condition = Condition?.Enabled == true ? $"[{Condition}]" : string.Empty;
+            var condition = Condition?.Enabled == true ? $"{Condition}" : string.Empty;
 
-            var result = $"[{Description.Name}]{index}{condition}";
+            var result = $"{Description.Name}{index} {condition}";
 
             if (Parent is null)
                 return result;
 
-            return $"{Parent}->{result}";
-        }
-
-        public string ToString(string? format, IFormatProvider? _ = null)
-        {
-            throw new NotImplementedException();
+            return $"{Parent} -> {result}";
         }
 
         void IWebComponent.SetCondition(ICondition condition) => Condition = condition.ThrowIfNull();

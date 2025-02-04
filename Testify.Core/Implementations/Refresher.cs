@@ -2,7 +2,9 @@
 using Testify.Core.Interfaces;
 using Testify.Core.Utilities;
 using OpenQA.Selenium;
+using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Testify.Core.Implementations
 {
@@ -12,13 +14,12 @@ namespace Testify.Core.Implementations
 
         private CancellationToken _token;
 
-        private IWebElement _element;
+        private IWebElement? _element;
 
         internal Refresher(IWebComponent component)
         {
             _component = component.ThrowIfNull();
             _token = new CancellationToken(true);
-            _element = null!;
         }
 
         public IWebElement Refresh(CancellationToken token, TimeSpan? timeout = null)
@@ -30,6 +31,9 @@ namespace Testify.Core.Implementations
                 _token = token;
                 return _element = GetElement(timeout.Value);
             }
+
+            if (_element is null)
+                return GetElement(timeout.Value);
 
             return _element;
         }

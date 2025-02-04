@@ -2,14 +2,17 @@
 using Testify.Core.Implementations.Requirements;
 using Testify.Core.Interfaces;
 using Testify.Core.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Testify.Core.Implementations
 {
     public sealed class WebComponentCollectionBuilder<TComponent> where TComponent : IWebComponent
     {
-        private readonly IWebComponent? _parent;
+        public Requirement<TComponent>? Requirement { get; private set; }
 
-        private Requirement<TComponent>? _requirement;
+        private readonly IWebComponent? _parent;
 
         private Description? _description;
 
@@ -29,7 +32,7 @@ namespace Testify.Core.Implementations
 
         private WebComponentCollectionBuilder(WebComponentCollectionBuilder<TComponent> builder)
         {
-            _requirement = builder._requirement;
+            Requirement = builder.Requirement;
             _description = builder._description;
             _duration = builder._duration;
             _timeout = builder._timeout;
@@ -40,10 +43,10 @@ namespace Testify.Core.Implementations
         public WebComponentCollectionBuilder<TComponent> WithRequirement<TBuilder>(Func<TBuilder, Requirement<TComponent>?> requirement) where TBuilder : RequirementBuilder<TComponent, TBuilder>
         {
             var builder = TypeExtensions.CreateInstance<TBuilder>(null);
-            return new(this) { _requirement = requirement.ThrowIfNull().Invoke(builder) };
+            return new(this) { Requirement = requirement.ThrowIfNull().Invoke(builder) };
         }
 
-        public WebComponentCollectionBuilder<TComponent> WithRequirement(Requirement<TComponent>? requirement) => new(this) { _requirement = requirement };
+        public WebComponentCollectionBuilder<TComponent> WithRequirement(Requirement<TComponent>? requirement) => new(this) { Requirement = requirement };
 
         public WebComponentCollectionBuilder<TComponent> WithDescription(Description? description) => new(this) { _description = description };
 
@@ -72,7 +75,7 @@ namespace Testify.Core.Implementations
 
             var instance = builder.Build();
 
-            if (_requirement is null)
+            if (Requirement is null)
             {
                 while (true)
                 {
@@ -96,7 +99,7 @@ namespace Testify.Core.Implementations
                     var description = instance.Description.With(index);
                     instance.SetDescription(description);
 
-                    if (_requirement.Execute(instance, _duration))
+                    if (Requirement.Execute(instance, _duration))
                     {
                         description = description.With(components.Count);
                         var component = builder.WithDescription(description).Build();
@@ -108,7 +111,7 @@ namespace Testify.Core.Implementations
                 }
             }
 
-            var availableRequirement = _requirement is not null ? _requirement
+            var availableRequirement = Requirement is not null ? Requirement
                 : new WebComponentRequirement<TComponent>().IsAvailable().Build();
 
             var availableComponents = components.Where(component => availableRequirement.Execute(component, TimeSpan.Zero)).ToList();
@@ -116,14 +119,14 @@ namespace Testify.Core.Implementations
             if (components.Count != availableComponents.Count)
                 return Build(availableComponents);
 
-            if (_requirement is not null)
+            if (Requirement is not null)
             {
                 components.Sort((left, right) => left.Index.CompareTo(right.Index));
 
                 for (var index = 0; index < components.Count; index++)
                 {
                     var description = components[index].Description.With(index);
-                    var condition = new Condition<TComponent>(components[index], _requirement);
+                    var condition = new Condition<TComponent>(components[index], Requirement);
 
                     components[index].SetDescription(description);
                     components[index].SetCondition(condition);

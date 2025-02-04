@@ -37,7 +37,7 @@ namespace Testify.Core.Implementations
 
         public string? GetValue(TimeSpan? timeout = null) => GetAttribute(ValueAttribute, timeout);
 
-        public string? GetClass(TimeSpan? timeout = null) => GetAttribute(ClassAttribute, timeout);
+        public string GetClass(TimeSpan? timeout = null) => GetAttribute(ClassAttribute, timeout) ?? string.Empty;
 
         public string GetText(TimeSpan? timeout = null) => Invoke(element => element.Text, TextDescription, timeout);
 

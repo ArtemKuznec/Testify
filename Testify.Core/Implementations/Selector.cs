@@ -1,5 +1,7 @@
 ﻿using Testify.Core.Utilities;
 using OpenQA.Selenium;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Testify.Core.Implementations

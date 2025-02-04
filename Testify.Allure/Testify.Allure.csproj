@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Allure.Net.Commons" Version="2.12.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Testify.Core\Testify.Core.csproj" />
   </ItemGroup>
 

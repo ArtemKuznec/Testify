@@ -9,7 +9,7 @@ using Interactions = OpenQA.Selenium.Interactions;
 
 namespace Testify.Core.Implementations
 {
-    public class Actions : IActions
+    public class Actions
     {
         private const string ContextClickDescription = "context clicking on";
 
@@ -21,27 +21,27 @@ namespace Testify.Core.Implementations
 
         private const string HoverDescription = "hovering on";
 
-        private readonly IWebComponent _component;
+        protected readonly IWebComponent component;
 
-        public Actions(IWebComponent component) => _component = component.ThrowIfNull();
+        public Actions(IWebComponent component) => this.component = component.ThrowIfNull();
 
-        private static Interactions.Actions CreateActions() => new(IWebComponent.Configuration.Driver);
+        protected static Interactions.Actions CreateActions() => new(IWebComponent.Configuration.Driver);
 
-        public virtual IActions SendKeys(string keys, TimeSpan? timeout = null) => Invoke(element => element.SendKeys(keys), $"sending \"{keys}\" keys to", timeout);
+        public virtual Actions SendKeys(string keys, TimeSpan? timeout = null) => Invoke(element => element.SendKeys(keys), $"sending \"{keys}\" keys to", timeout);
 
-        public virtual IActions ContextClick(TimeSpan? timeout = null) => Invoke(element => CreateActions().ContextClick(element).Perform(), ContextClickDescription, timeout);
+        public virtual Actions ContextClick(TimeSpan? timeout = null) => Invoke(element => CreateActions().ContextClick(element).Perform(), ContextClickDescription, timeout);
 
-        public virtual IActions DoubleClick(TimeSpan? timeout = null) => Invoke(element => CreateActions().DoubleClick(element).Perform(), DoubleClickDescription, timeout);
+        public virtual Actions DoubleClick(TimeSpan? timeout = null) => Invoke(element => CreateActions().DoubleClick(element).Perform(), DoubleClickDescription, timeout);
 
-        public virtual IActions Hover(TimeSpan? timeout = null) => Invoke(element => CreateActions().MoveToElement(element).Perform(), HoverDescription, timeout);
+        public virtual Actions Hover(TimeSpan? timeout = null) => Invoke(element => CreateActions().MoveToElement(element).Perform(), HoverDescription, timeout);
 
-        public virtual IActions Clear(TimeSpan? timeout = null) => Invoke(element => element.Clear(), ClearDescription, timeout);
+        public virtual Actions Clear(TimeSpan? timeout = null) => Invoke(element => element.Clear(), ClearDescription, timeout);
 
-        public virtual IActions Click(TimeSpan? timeout = null) => Invoke(element => element.Click(), ClickDescription, timeout);
+        public virtual Actions Click(TimeSpan? timeout = null) => Invoke(element => element.Click(), ClickDescription, timeout);
 
         private Actions Invoke(Action<IWebElement> action, string actionErrorDescription, TimeSpan? timeout = null)
         {
-            timeout ??= _component.Timeout;
+            timeout ??= component.Timeout;
 
             var stopwatch = Stopwatch.StartNew();
 
@@ -51,14 +51,14 @@ namespace Testify.Core.Implementations
 
                 try
                 {
-                    var element = _component.Refresher.Refresh(source.Token, TimeSpan.Zero);
+                    var element = component.Refresher.Refresh(source.Token, TimeSpan.Zero);
                     action.Invoke(element);
                     return this;
                 }
                 catch (Exception exception)
                 {
                     if (stopwatch.Elapsed >= timeout.Value)
-                        throw new ActionException($"An exception occurred while {actionErrorDescription} the web component.", _component, exception);
+                        throw new ActionException($"An exception occurred while {actionErrorDescription} the web component.", component, exception);
                 }
                 finally
                 {

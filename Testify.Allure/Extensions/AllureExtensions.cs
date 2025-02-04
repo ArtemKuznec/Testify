@@ -1,4 +1,6 @@
-﻿using Allure.Net.Commons;
+﻿using Testify.Allure;
+using System;
+using Allure.Net.Commons;
 
 namespace Testify.Allure.Extensions
 {

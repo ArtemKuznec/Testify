@@ -2,11 +2,11 @@
 
 namespace Testify.Core.Implementations
 {
-    public class WebComponentContext : IWebComponentContext
+    public class SearchContext : ISearchContext
     {
         private readonly IWebComponent? _parent;
 
-        public WebComponentContext(IWebComponent? parent = null) => _parent = parent;
+        public SearchContext(IWebComponent? parent = null) => _parent = parent;
 
         public WebComponentCollectionBuilder<TComponent> GetComponents<TComponent>() where TComponent : IWebComponent => new(_parent);
 

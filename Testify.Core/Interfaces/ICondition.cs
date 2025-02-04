@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace Testify.Core.Interfaces
 {
     public interface ICondition

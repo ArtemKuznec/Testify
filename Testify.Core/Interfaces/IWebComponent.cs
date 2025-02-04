@@ -1,8 +1,9 @@
 ﻿using Testify.Core.Implementations;
+using System;
 
 namespace Testify.Core.Interfaces
 {
-    public interface IWebComponent : IFormattable, IEquatable<IWebComponent>, IWebComponentContext
+    public interface IWebComponent : IEquatable<IWebComponent>, ISearchContext
     {
         static WebComponentConfiguration Configuration { get; set; } = null!;
 
@@ -12,7 +13,7 @@ namespace Testify.Core.Interfaces
 
         Refresher Refresher { get; }
 
-        IActions Actions { get; }
+        Actions Actions { get; }
 
         IWebComponent? Parent { get; }
 
@@ -24,14 +25,14 @@ namespace Testify.Core.Interfaces
 
         bool IsAvailable(TimeSpan? timeout = null);
 
+        internal void SetCondition(ICondition condition);
+
         internal void SetDescription(Description description);
 
-        internal void SetCondition(ICondition condition);
+        internal void SetIndex(int index);
 
         internal void SetParent(IWebComponent parent);
 
         internal void SetTimeout(TimeSpan timeout);
-
-        internal void SetIndex(int index);
     }
 }

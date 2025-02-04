@@ -2,7 +2,7 @@
 
 namespace Testify.Core.Interfaces
 {
-    public interface IWebComponentContext
+    public interface ISearchContext
     {
         WebComponentCollectionBuilder<TComponent> GetComponents<TComponent>() where TComponent : IWebComponent;
 

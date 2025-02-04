@@ -1,5 +1,4 @@
 ﻿using Testify.Core.Interfaces;
-using System;
 
 namespace Testify.Core.Exceptions
 {
