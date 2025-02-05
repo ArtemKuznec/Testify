@@ -8,7 +8,7 @@ namespace Testify.Tests
     public class ChatGPTTest : TestBase
     {
         [Fact]
-        public void TestGoogleSearch()
+        public void TestChatGPT()
         {
             Context.GetComponent<ButtonComponent>().Build().Click();
 
